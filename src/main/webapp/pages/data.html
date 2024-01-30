@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>AdminLTE 2 | Data Tables</title>
+    <!-- Tell the browser to be responsive to screen width -->
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <!-- Main content -->
+    <section class="content">
+        <div class="row">
+            <div class="col-xs-12">
+                <div id="app" class="box">
+                    <div class="box-header">
+                        <button type="button" class="btn btn-success" @click="openAddWindow()">添加</button>
+                    </div>
+                    <div class="box-body">
+                        <!--数据表格-->
+                        <table id="data_table" class="table table-bordered table-hover">
+                            <thead>
+                            <tr align="center">
+                                <th class="sorting_asc text-center" >ID</th>
+                                <th class="sorting_desc text-center">账号名</th>
+                                <th class="sorting text-center">余额</th>
+                                <th class="text-center">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <!--循环次tr,插值表达式赋值 -->
+                            <tr v-for="user in userList" align="center">
+                                <td>{{user.id}}</td>
+                                <td>{{user.name}}</td>
+                                <td>{{user.money}}</td>
+                                <td>
+                                    <!--
+                                        添加点击事件,弹出修改的模态框,数据的回显查询
+                                        事件函数中,传递要修改数据的主键
+                                    -->
+                                    <button type="button" class="btn btn-info" @click="openUpdateWindow(user.id)">修改</button>
+
+                                    <!--
+                                      添加点击事件 提示是否确定要删除
+                                      事件函数中,传递要删除的主键
+                                    -->
+                                    <button type="button" class="btn btn-danger" @click="deleteUser(user.id)">删除</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--修改 模块-->
+                    <div id="update_modal" class="modal fade" role="dialog" data-backdrop="static">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">修改--用户信息</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" class="form-control">
+                                    <div class="box-body">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <label for="inputEmail3" class="col-sm-2 control-label">账户名</label>
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" placeholder="name" v-model="userInfo.name">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="inputPassword3" class="col-sm-2 control-label" >余额</label>
+
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" placeholder="money" v-model="userInfo.money">
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="box-footer">
+                                            <button type="button" class="btn btn-outline" data-dismiss="modal">关闭
+                                            </button>
+                                            <!--点击事件,服务器发送请求,修改数据-->
+                                            <button type="button" class="btn btn-outline" data-dismiss="modal" @click="updateUser()">修改
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!--添加  模块-->
+                    <div id="add_modal" class="modal fade" role="dialog" data-backdrop="static">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title">添加--用户信息</h4>
+                                </div>
+                                <div class="modal-body">
+
+                                    <div class="box-body">
+                                        <form class="form-horizontal">
+                                            <div class="box-body">
+                                                <div class="form-group">
+                                                    <label for="inputEmail3" class="col-sm-2 control-label">账户名</label>
+
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="inputEmail3"
+                                                               placeholder="name" v-model="userInfo.name">
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="inputPassword3"
+                                                           class="col-sm-2 control-label">余额</label>
+
+                                                    <div class="col-sm-10">
+                                                        <input type="text" class="form-control" id="inputPassword3"
+                                                               placeholder="money" v-model="userInfo.money" >
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                            <!-- /.box-body -->
+                                            <div class="box-footer">
+                                                <button type="button" class="btn btn-outline" data-dismiss="modal">关闭
+                                                </button>
+                                                <button @click="addUser()" type="button" class="btn btn-outline"  data-dismiss="modal">添加
+                                                </button>
+                                            </div>
+                                            <!-- /.box-footer -->
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- /.modal-content -->
+                        </div>
+                        <!-- /.modal-dialog -->
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <!-- /.col -->
+        </div>
+        <!-- /.row -->
+    </section>
+    <!-- /.content -->
+</div>
+</div>
+</body>
+<script src="../js/jquery-1.12.4.min.js"></script>
+<script src="../js/bootstrap.min.js"></script>
+<script src="../js/axios-0.18.0.js"></script>
+<script src="../js/vue.js"></script>
+<script src="../js/user.js"></script>
+</html>
